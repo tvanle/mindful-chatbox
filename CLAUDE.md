@@ -1,28 +1,66 @@
 # Mindful Chatbox - Mental Health Consultation Web Platform
 
 ## Project Overview
-Web-based Vietnamese chatbox system for basic mental health consultation, specializing in stress management and sleep improvement advice. 
+Web-based Vietnamese mental health consultation chatbox using **EXTERNAL AI APIs ONLY** (Claude, GPT, Gemini, etc.)
+- Không train model riêng, chỉ dùng AI có sẵn
+- Tự chuẩn bị data mẫu, prompt templates, và response patterns
+- Focus: Stress management & sleep improvement
 
-**IMPORTANT**: This system provides general wellness guidance only - NOT medical diagnosis or treatment.
+## Complete Web Application Requirements
 
-## Technology Stack (Flexible - Choose What Works Best)
+### 1. Core Features (Tính năng chính)
+- **Chat Interface**: Giao diện chat real-time
+- **User Session Management**: Quản lý phiên chat của user
+- **Conversation History**: Lưu và xem lại lịch sử chat
+- **Response Feedback**: Đánh giá câu trả lời (helpful/not helpful)
+- **Multi-language Support**: Tiếng Việt + English
 
-### Backend Options
-- **Framework**: FastAPI / Flask / Django (tùy chọn)
-- **NLP Libraries**: Any Vietnamese NLP library (pyvi, underthesea, vncorenlp, etc.)
-- **Database**: Any SQL/NoSQL database you prefer
-- **ML Framework**: Use any (TensorFlow, PyTorch, scikit-learn, etc.)
+### 2. User Experience (UX/UI)
+- **Responsive Design**: Hoạt động tốt trên mobile/tablet/desktop
+- **Typing Indicators**: Hiển thị "bot đang gõ..."
+- **Message Status**: Sent/Delivered/Read indicators
+- **Dark/Light Mode**: Chế độ sáng/tối
+- **Accessibility**: Support screen readers, keyboard navigation
+- **Loading States**: Skeleton screens, spinners
+- **Error Handling**: User-friendly error messages
 
-### Frontend Options  
-- **Framework**: React / Vue / Angular / Svelte (tự do lựa chọn)
-- **UI Library**: Any UI framework (Bootstrap, Tailwind, MUI, Ant Design, etc.)
-- **State Management**: Choose what fits (Redux, Zustand, Context API, Pinia, etc.)
-- **HTTP Client**: Fetch API, Axios, or any preferred library
+### 3. Security & Privacy
+- **Data Encryption**: HTTPS, encrypt sensitive data
+- **Rate Limiting**: Prevent API abuse
+- **Input Validation**: Sanitize user inputs
+- **Session Security**: Secure session tokens
+- **CORS Configuration**: Proper cross-origin setup
+- **API Key Protection**: Environment variables, never expose keys
 
-### Machine Learning Approach
-- **Algorithms**: External APIs or services (GPT, Claude API, Gemini, etc.)
-- **Training Data**: Tự thu thập và xây dựng dataset riêng
-- **No restrictions on ML libraries or approaches**
+### 4. Performance Optimization
+- **Caching**: Cache common responses
+- **Lazy Loading**: Load components on demand
+- **Image Optimization**: Compress images, use WebP
+- **Code Splitting**: Split bundle for faster loads
+- **CDN Integration**: Static assets on CDN
+- **Database Indexing**: Optimize queries
+
+### 5. Admin Features
+- **Dashboard**: Analytics, user statistics
+- **Content Management**: Update prompts, responses
+- **User Management**: View/manage user sessions
+- **Monitoring**: Track API usage, costs
+- **Export Data**: Download chat logs, analytics
+
+### 6. External AI Setup
+```javascript
+// Prepare data templates for AI
+const PROMPT_TEMPLATES = {
+  stress: "Bạn là chuyên gia tư vấn sức khỏe tâm thần. User nói: {message}. Hãy tư vấn về quản lý stress...",
+  sleep: "Với tư cách consultant về giấc ngủ, hãy tư vấn cho user: {message}..."
+}
+
+// Response processing
+function processAIResponse(rawResponse) {
+  // Format, validate, add safety checks
+  return formattedResponse;
+}
+```
 
 ## Project Structure
 
@@ -162,45 +200,72 @@ POST   /api/admin/responses  # Update responses
 GET    /api/admin/logs      # View conversations
 ```
 
-## Training Data Collection Strategy
+## Data Preparation (Chuẩn bị dữ liệu mẫu)
 
-### Tự Thu Thập Data
-- **Phương pháp**: Tự xây dựng dataset từ đầu
-- **Nguồn**: 
-  - Survey người dùng thực tế
-  - Thu thập câu hỏi thường gặp về sức khỏe tâm thần
-  - Tham khảo tài liệu y khoa (chỉ lấy ý tưởng, không copy)
-  - Crowdsourcing từ cộng đồng
-
-### Data Structure Example
+### Prompt Engineering Templates
 ```json
 {
-  "training_samples": [
+  "system_prompts": {
+    "role": "Bạn là chuyên gia tư vấn sức khỏe tâm thần, chuyên về stress và giấc ngủ. Trả lời bằng tiếng Việt, ngắn gọn, thân thiện.",
+    "guidelines": [
+      "Không đưa ra chẩn đoán y khoa",
+      "Luôn khuyên gặp bác sĩ nếu nghiêm trọng",
+      "Tập trung vào lời khuyên thực tế"
+    ]
+  },
+  
+  "intent_detection": {
+    "stress_keywords": ["căng thẳng", "áp lực", "stress", "lo lắng", "bức bối"],
+    "sleep_keywords": ["mất ngủ", "khó ngủ", "ngủ không ngon", "thức giấc"],
+    "crisis_keywords": ["tự tử", "muốn chết", "không muốn sống"]
+  },
+  
+  "response_templates": {
+    "greeting": "Xin chào! Tôi có thể hỗ trợ bạn về vấn đề stress và giấc ngủ. Bạn đang gặp khó khăn gì?",
+    "crisis": "Tôi nhận thấy bạn đang rất khó khăn. Vui lòng liên hệ ngay: Tổng đài tâm lý 1900-xxx",
+    "unclear": "Bạn có thể chia sẻ rõ hơn về tình trạng của mình được không?"
+  }
+}
+```
+
+### Sample Conversations for Testing
+```json
+{
+  "test_conversations": [
     {
-      "user_input": "Tôi cảm thấy căng thẳng quá",
-      "intent": "stress",
-      "response_type": "breathing_technique",
-      "context": "work_stress"
+      "user": "Tôi không ngủ được 3 ngày rồi",
+      "expected_intent": "insomnia",
+      "expected_response_contains": ["thói quen ngủ", "tránh caffeine", "thư giãn"]
     },
     {
-      "user_input": "Không ngủ được mấy ngày rồi",
-      "intent": "insomnia",
-      "response_type": "sleep_tips",
-      "severity": "moderate"
+      "user": "Công việc làm tôi căng thẳng",
+      "expected_intent": "work_stress",
+      "expected_response_contains": ["hít thở sâu", "nghỉ ngơi", "ưu tiên công việc"]
     }
   ]
 }
 ```
 
-### External API Integration
+### API Integration with Safety Layer
 ```python
-# Example: Using Claude API, GPT, or Gemini
-import anthropic  # or openai, google.generativeai
-
-def get_ai_response(user_message):
-    # Call external AI service
-    # Process and return response
-    pass
+def get_safe_ai_response(user_message, conversation_history):
+    # 1. Check for crisis keywords first
+    if contains_crisis_keywords(user_message):
+        return CRISIS_RESPONSE
+    
+    # 2. Detect intent
+    intent = detect_intent(user_message)
+    
+    # 3. Build context-aware prompt
+    prompt = build_prompt(intent, user_message, conversation_history)
+    
+    # 4. Call external AI
+    ai_response = call_ai_api(prompt)  # Claude/GPT/Gemini
+    
+    # 5. Validate & sanitize response
+    safe_response = validate_response(ai_response)
+    
+    return safe_response
 ```
 
 ## Development Commands
@@ -352,15 +417,86 @@ Bạn không đơn độc, luôn có người sẵn sàng giúp đỡ.
 - Error rates
 ```
 
+## Additional Web App Components
+
+### 7. DevOps & Deployment
+- **Version Control**: Git with proper branching strategy
+- **CI/CD Pipeline**: Automated testing and deployment
+- **Environment Management**: Dev/Staging/Production
+- **SSL Certificate**: HTTPS required for production
+- **Domain & DNS**: Custom domain setup
+- **Backup Strategy**: Regular database backups
+- **Monitoring**: Uptime monitoring, error tracking (Sentry)
+
+### 8. Analytics & Tracking
+- **User Analytics**: Google Analytics or similar
+- **Chat Analytics**: Track popular topics, response quality
+- **Performance Metrics**: Page load times, API response times
+- **Cost Tracking**: Monitor AI API usage costs
+- **A/B Testing**: Test different prompts/UI elements
+
+### 9. Legal & Compliance
+- **Terms of Service**: Clear usage terms
+- **Privacy Policy**: Data handling disclosure
+- **Cookie Consent**: GDPR compliance if needed
+- **Disclaimer**: Medical disclaimer prominently displayed
+- **Age Verification**: Ensure users are 13+ (or local requirement)
+
+### 10. Testing Strategy
+```javascript
+// Unit Tests
+test('detects stress keywords correctly', () => {
+  expect(detectIntent('tôi rất căng thẳng')).toBe('stress');
+});
+
+// Integration Tests
+test('API returns valid response', async () => {
+  const response = await callChatAPI('xin chào');
+  expect(response).toHaveProperty('message');
+});
+
+// E2E Tests
+test('user can send message and receive response', () => {
+  // Selenium/Playwright test
+});
+```
+
 ## Deployment Checklist
 
-- [ ] Environment variables configured
-- [ ] Database migrations run
-- [ ] ML models loaded
-- [ ] SSL certificates installed
-- [ ] CORS settings verified
-- [ ] Rate limiting enabled
-- [ ] Logging configured
-- [ ] Backup strategy implemented
-- [ ] Monitoring alerts setup
-- [ ] Load testing completed
+### Pre-Launch
+- [ ] API keys secured in environment variables
+- [ ] Database configured and tested
+- [ ] CORS properly configured
+- [ ] Rate limiting implemented
+- [ ] Error logging setup (console/file/service)
+- [ ] Crisis detection tested thoroughly
+- [ ] Response time < 3 seconds
+- [ ] Mobile responsive tested
+- [ ] Cross-browser compatibility checked
+- [ ] Load testing completed (handle 100+ concurrent users)
+
+### Security
+- [ ] HTTPS enabled
+- [ ] Input sanitization implemented
+- [ ] XSS protection enabled
+- [ ] SQL injection prevention (if using SQL)
+- [ ] API authentication implemented
+- [ ] Session management secure
+- [ ] Sensitive data encrypted
+
+### Production
+- [ ] Domain DNS configured
+- [ ] SSL certificate installed
+- [ ] Monitoring alerts configured
+- [ ] Backup automation setup
+- [ ] Analytics tracking enabled
+- [ ] Error tracking (Sentry) configured
+- [ ] Performance monitoring active
+- [ ] Documentation completed
+
+### Post-Launch
+- [ ] User feedback collection active
+- [ ] A/B testing configured
+- [ ] Cost monitoring dashboard
+- [ ] Regular security audits scheduled
+- [ ] Update deployment process documented

@@ -1,0 +1,20 @@
+Hệ thống chatbox tư vấn thông tin Mô tả: 
+• Nhận văn bản do người dùng gõ vào để trò chuyện 
+• Hệ thống nhận dạng văn bản, phân loại câu trò chuyện, tìm        
+  câu trả lời để giao tiếp với người dùng 
+• Nội dung      
+  tư vấn nên hạn chế trong một lĩnh vực hẹp (tư vấn       
+  chọn ngành, chọn trường...), sau đó mới phát triển      
+  dần lên. Các công việc cần thực hiện: • Thu 
+  thập/xây dựng mẫu cho máy học 
+• Tìm hiểu các thuật      
+  toán/ đánh giá và lựa chọn thuật toán phù hợp cho       
+  bài toán 
+• Xây dựng hệ thống nhận dạng trên server      
+  web 
+• Xây dựng hệ thống client (điện 
+  thoại/web/desktop) kết nối vào server để chạy .
+  
+  Chủ đề: Tư vấn sức khỏe tinh thần cơ bản: Gợi ý quản     
+   lý stress, giấc ngủ; không thay thế bác sĩ, tập        
+  trung lời khuyên chung.

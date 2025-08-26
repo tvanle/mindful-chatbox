@@ -5,25 +5,24 @@ Web-based Vietnamese chatbox system for basic mental health consultation, specia
 
 **IMPORTANT**: This system provides general wellness guidance only - NOT medical diagnosis or treatment.
 
-## Technology Stack (Selected)
+## Technology Stack (Flexible - Choose What Works Best)
 
-### Backend: Python + FastAPI
-- **Framework**: FastAPI (modern, fast, built-in async support)
-- **NLP Engine**: Underthesea + PhoBERT for Vietnamese processing
-- **Database**: PostgreSQL (user sessions) + Redis (caching)
-- **ML Framework**: Transformers + scikit-learn
+### Backend Options
+- **Framework**: FastAPI / Flask / Django (tùy chọn)
+- **NLP Libraries**: Any Vietnamese NLP library (pyvi, underthesea, vncorenlp, etc.)
+- **Database**: Any SQL/NoSQL database you prefer
+- **ML Framework**: Use any (TensorFlow, PyTorch, scikit-learn, etc.)
 
-### Frontend: React + TypeScript
-- **Framework**: React 18 with TypeScript
-- **UI Library**: Ant Design / Material-UI
-- **State Management**: Redux Toolkit
-- **API Client**: Axios with React Query
-- **Real-time**: Socket.io-client
+### Frontend Options  
+- **Framework**: React / Vue / Angular / Svelte (tự do lựa chọn)
+- **UI Library**: Any UI framework (Bootstrap, Tailwind, MUI, Ant Design, etc.)
+- **State Management**: Choose what fits (Redux, Zustand, Context API, Pinia, etc.)
+- **HTTP Client**: Fetch API, Axios, or any preferred library
 
-### Infrastructure
-- **Deployment**: Docker + Nginx
-- **Model Serving**: ONNX Runtime for optimized inference
-- **Monitoring**: Prometheus + Grafana
+### Machine Learning Approach
+- **Algorithms**: External APIs or services (GPT, Claude API, Gemini, etc.)
+- **Training Data**: Tự thu thập và xây dựng dataset riêng
+- **No restrictions on ML libraries or approaches**
 
 ## Project Structure
 
@@ -163,21 +162,45 @@ POST   /api/admin/responses  # Update responses
 GET    /api/admin/logs      # View conversations
 ```
 
-## Training Data Structure
+## Training Data Collection Strategy
 
+### Tự Thu Thập Data
+- **Phương pháp**: Tự xây dựng dataset từ đầu
+- **Nguồn**: 
+  - Survey người dùng thực tế
+  - Thu thập câu hỏi thường gặp về sức khỏe tâm thần
+  - Tham khảo tài liệu y khoa (chỉ lấy ý tưởng, không copy)
+  - Crowdsourcing từ cộng đồng
+
+### Data Structure Example
 ```json
 {
-  "intents": {
-    "stress_management": {
-      "patterns": ["căng thẳng", "stress", "áp lực", "mệt mỏi"],
-      "responses": ["breathing_exercise", "mindfulness_tips", "relaxation_guide"]
+  "training_samples": [
+    {
+      "user_input": "Tôi cảm thấy căng thẳng quá",
+      "intent": "stress",
+      "response_type": "breathing_technique",
+      "context": "work_stress"
     },
-    "sleep_issues": {
-      "patterns": ["mất ngủ", "khó ngủ", "ngủ không ngon"],
-      "responses": ["sleep_hygiene", "bedtime_routine", "relaxation_techniques"]
+    {
+      "user_input": "Không ngủ được mấy ngày rồi",
+      "intent": "insomnia",
+      "response_type": "sleep_tips",
+      "severity": "moderate"
     }
-  }
+  ]
 }
+```
+
+### External API Integration
+```python
+# Example: Using Claude API, GPT, or Gemini
+import anthropic  # or openai, google.generativeai
+
+def get_ai_response(user_message):
+    # Call external AI service
+    # Process and return response
+    pass
 ```
 
 ## Development Commands
@@ -208,52 +231,62 @@ flake8 backend/
 npm run lint --prefix frontend
 ```
 
-## Sample Code Implementation
+## Sample Code Implementation (Examples - Use Any Framework)
 
-### Backend - FastAPI Main App
+### Backend Example - Flask/FastAPI/Django
 ```python
-# backend/app/main.py
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from app.api.endpoints import chat
-from app.core.config import settings
+# Example with Flask
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 
-app = FastAPI(title="Mindful Chatbox API")
+app = Flask(__name__)
+CORS(app)
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+@app.route('/api/chat', methods=['POST'])
+def chat():
+    user_message = request.json['message']
+    # Call external AI API (Claude, GPT, Gemini, etc.)
+    response = process_with_ai(user_message)
+    return jsonify({'response': response})
 
-app.include_router(chat.router, prefix="/api/chat")
+# Or use FastAPI, Django REST, or any framework
 ```
 
-### Frontend - Chat Component
-```typescript
-// frontend/src/components/ChatBox/ChatBox.tsx
-import React, { useState } from 'react';
-import { sendMessage } from '../../services/api';
+### Frontend Example - Any Framework
+```javascript
+// Vanilla JS example
+async function sendMessage(message) {
+    const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message})
+    });
+    return response.json();
+}
 
-const ChatBox: React.FC = () => {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
-  
-  const handleSend = async () => {
-    const response = await sendMessage(input);
-    setMessages([...messages, 
-      { text: input, sender: 'user' },
-      { text: response.message, sender: 'bot' }
-    ]);
-  };
-  
-  return (
-    <div className="chat-container">
-      {/* Chat UI implementation */}
-    </div>
-  );
-};
+// Or use React, Vue, Angular, Svelte - whatever you prefer
+```
+
+### AI Integration Examples
+```python
+# Option 1: Claude API
+from anthropic import Anthropic
+client = Anthropic(api_key="your-key")
+response = client.messages.create(...)
+
+# Option 2: OpenAI GPT
+import openai
+response = openai.ChatCompletion.create(...)
+
+# Option 3: Google Gemini
+import google.generativeai as genai
+model = genai.GenerativeModel('gemini-pro')
+response = model.generate_content(...)
+
+# Option 4: Local model with Transformers
+from transformers import pipeline
+chatbot = pipeline("text-generation")
+response = chatbot(user_input)
 ```
 
 ## Environment Variables

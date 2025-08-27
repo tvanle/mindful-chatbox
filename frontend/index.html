@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindful Chatbox - Tư vấn sức khỏe tâm thần</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">🧠 Mindful Chat</h1>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <svg class="sun-icon" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <line x1="12" y1="1" x2="12" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="23"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="1" y1="12" x2="3" y2="12"/>
+                        <line x1="21" y1="12" x2="23" y2="12"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
+                    <svg class="moon-icon" width="24" height="24" fill="currentColor">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Disclaimer -->
+        <div class="disclaimer" id="disclaimer">
+            <p>⚠️ <strong>Lưu ý:</strong> Đây là công cụ hỗ trợ tư vấn cơ bản về sức khỏe tâm thần, không thay thế cho việc khám và điều trị y tế chuyên nghiệp. Nếu bạn đang trong tình trạng khẩn cấp, vui lòng liên hệ ngay tổng đài tâm lý <strong>1900-9099</strong> hoặc đến cơ sở y tế gần nhất.</p>
+            <button class="disclaimer-close" onclick="document.getElementById('disclaimer').style.display='none'">✕</button>
+        </div>
+
+        <!-- Chat Container -->
+        <div class="chat-container">
+            <!-- Messages Area -->
+            <div class="messages-area" id="messagesArea">
+                <div class="welcome-message">
+                    <h2>Xin chào! 👋</h2>
+                    <p>Tôi là trợ lý tư vấn sức khỏe tâm thần, có thể hỗ trợ bạn về:</p>
+                    <ul>
+                        <li>🧘 Quản lý stress và lo âu</li>
+                        <li>😴 Cải thiện giấc ngủ</li>
+                        <li>💆 Kỹ thuật thư giãn</li>
+                        <li>🌱 Lối sống lành mạnh</li>
+                    </ul>
+                    <p>Hãy chia sẻ với tôi những khó khăn bạn đang gặp phải.</p>
+                </div>
+            </div>
+
+            <!-- Typing Indicator -->
+            <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <form id="chatForm" class="chat-form">
+                    <textarea 
+                        id="messageInput" 
+                        class="message-input"
+                        placeholder="Nhập tin nhắn của bạn..."
+                        rows="1"
+                        maxlength="1000"
+                        required
+                    ></textarea>
+                    <button type="submit" class="send-button" id="sendButton">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"/>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                        </svg>
+                    </button>
+                </form>
+                <div class="input-info">
+                    <span id="charCount">0/1000</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <button class="quick-action" data-message="Tôi đang cảm thấy căng thẳng">
+                😰 Căng thẳng
+            </button>
+            <button class="quick-action" data-message="Tôi không ngủ được">
+                😴 Mất ngủ
+            </button>
+            <button class="quick-action" data-message="Tôi muốn học cách thư giãn">
+                🧘 Thư giãn
+            </button>
+            <button class="quick-action" data-message="Làm thế nào để giảm lo âu?">
+                😟 Lo âu
+            </button>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div class="modal" id="feedbackModal" style="display: none;">
+        <div class="modal-content">
+            <h3>Đánh giá câu trả lời</h3>
+            <p>Câu trả lời này có hữu ích không?</p>
+            <div class="feedback-buttons">
+                <button class="feedback-btn helpful" data-helpful="true">
+                    👍 Hữu ích
+                </button>
+                <button class="feedback-btn not-helpful" data-helpful="false">
+                    👎 Không hữu ích
+                </button>
+            </div>
+            <textarea 
+                class="feedback-comment" 
+                id="feedbackComment"
+                placeholder="Góp ý thêm (không bắt buộc)..."
+                rows="3"
+            ></textarea>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeFeedbackModal()">Hủy</button>
+                <button class="btn-submit" onclick="submitFeedback()">Gửi</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/ui.js"></script>
+</body>
+</html>

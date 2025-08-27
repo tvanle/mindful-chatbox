@@ -5,7 +5,8 @@ Hệ thống chatbox tư vấn thông tin Mô tả:
 • Nội dung      
   tư vấn nên hạn chế trong một lĩnh vực hẹp (tư vấn       
   chọn ngành, chọn trường...), sau đó mới phát triển      
-  dần lên. Các công việc cần thực hiện: • Thu 
+  dần lên. Các công việc cần thực hiện: 
+  • Thu 
   thập/xây dựng mẫu cho máy học 
 • Tìm hiểu các thuật      
   toán/ đánh giá và lựa chọn thuật toán phù hợp cho       
